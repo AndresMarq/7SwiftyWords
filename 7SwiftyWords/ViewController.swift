@@ -17,6 +17,9 @@ class ViewController: UIViewController {
     var activatedButtons = [UIButton]()
     var solutions = [String]()
     
+    // Keeps track of possitive points gained for level up
+    var possitivePoints = 0
+    
     var score = 0 {
         didSet {
             scoreLabel.text = "Score: \(score)"
@@ -75,6 +78,9 @@ class ViewController: UIViewController {
         let buttonsView = UIView()
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonsView)
+        
+        buttonsView.layer.borderWidth = 1
+        buttonsView.layer.borderColor = UIColor.black.cgColor
         
         NSLayoutConstraint.activate([
             scoreLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
@@ -157,12 +163,19 @@ class ViewController: UIViewController {
             
             currentAnswer.text = ""
             score += 1
+            possitivePoints += 1
             
-            if score % 7 == 0 {
+            if possitivePoints % 7 == 0 {
                 let ac = UIAlertController(title: "Well Done", message: "Are you ready for the next level?", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
                 present(ac, animated: true)
             }
+        } else {
+            score -= 1
+            clearTapped(sender)
+            let ac = UIAlertController(title: "Wrong Answer", message: "Try Again!", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
         }
     }
     
